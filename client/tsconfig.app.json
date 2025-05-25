@@ -24,7 +24,8 @@
     "noUncheckedSideEffectImports": true,
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types", "../shared"]
   },
-  "include": ["src", "postcss.config.mjs"]
+  "include": ["src", "postcss.config.mjs", "../shared/**/*.d.ts"]
 }

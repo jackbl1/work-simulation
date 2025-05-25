@@ -1,66 +1,58 @@
 import { useEffect, useState } from "react";
-import { Box, Container, Heading, Text, VStack } from "@chakra-ui/react";
-import TranscriptPanel from "./components/TranscriptPanel";
-import { ChatPanel } from "./components/ChatPanel";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
+import { Box, Container, Heading, HStack, VStack } from "@chakra-ui/react";
+import { TranscriptPanel } from "./components/transcript/TranscriptPanel";
+import { ChatPanel } from "./components/chat/ChatPanel";
 
 function App() {
-  const [users, setUsers] = useState<User[]>([]);
-
-  useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + "/users")
-      .then((res) => res.json())
-      .then(setUsers);
-  }, []);
-
   const [transcript, setTranscript] = useState<string>("");
 
   useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + "/transcript")
-      .then((res) => res.text())
-      .then(setTranscript);
+    const fetchTranscript = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/transcript`
+        );
+        const data: SharedTypes.TranscriptData = await response.json();
+
+        if (data) {
+          setTranscript(data.transcript);
+        }
+      } catch (error) {
+        console.error("Error fetching transcript:", error);
+      }
+    };
+
+    fetchTranscript();
   }, []);
 
   return (
-    <Container maxW="container.md" py={8}>
-      <VStack gap={6}>
-        <Heading as="h1" size="xl">
-          Blueprint AI Work Simulation Exercise
-        </Heading>
-        <VStack gap={4} width="100%">
-          {users.map((user) => (
-            <Box
-              key={user.id}
-              border="1px solid"
-              borderColor="black"
-              borderRadius="md"
-              p={4}
-              width="100%"
-              transition="all 0.2s"
-              _hover={{
-                transform: "translateX(4px)",
-                boxShadow: "md",
-                borderColor: "blue.500",
-                cursor: "pointer",
-              }}
-            >
-              <Text fontWeight="bold" fontSize="lg">
-                ID: {user.id}
-              </Text>
-              <Text fontSize="md">Name: {user.name}</Text>
-              <Text color="gray.600">Email: {user.email}</Text>
+    <Box minH="100vh" bg="gray.50" py={8}>
+      <Container maxW="8xl" h="calc(100vh - 64px)" px={4}>
+        <VStack h="full" spacing={6} align="stretch">
+          <Heading as="h1" size="xl" textAlign="center">
+            Blueprint AI Work Simulation Exercise
+          </Heading>
+          <HStack
+            align="stretch"
+            spacing={0}
+            h="full"
+            bg="white"
+            rounded="lg"
+            overflow="hidden"
+            borderWidth="1px"
+            borderColor="gray.200"
+            shadow="sm"
+          >
+            <Box flex="1" borderRightWidth="1px" borderColor="gray.200">
+              <TranscriptPanel transcript={transcript} />
             </Box>
-          ))}
+            <Box flex="1">
+              <ChatPanel />
+            </Box>
+          </HStack>
         </VStack>
-        <TranscriptPanel transcript={transcript} />
-        <ChatPanel />
-      </VStack>
-    </Container>
+      </Container>
+    </Box>
   );
 }
 

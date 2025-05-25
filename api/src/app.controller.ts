@@ -1,5 +1,5 @@
 import { Controller, Get, Post } from '@nestjs/common';
-import { AppService } from './app.service';
+import type { AppService } from './app.service';
 
 @Controller()
 export class AppController {
@@ -21,14 +21,7 @@ export class AppController {
   }
 
   @Get('transcript')
-  async getTranscript(): Promise<{
-    transcript: string;
-    chunkData: {
-      id: string;
-      speaker: string;
-      text: string;
-    }[];
-  }> {
+  async getTranscript(): Promise<SharedTypes.TranscriptData> {
     return this.appService.getTranscript();
   }
 }

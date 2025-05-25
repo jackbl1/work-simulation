@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { db } from './db/db';
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
 import OpenAI from 'openai';
 
 @Injectable()
@@ -65,14 +65,7 @@ export class AppService {
     return `Fixed transcript saved to: ${fixedTranscriptPath}`;
   }
 
-  async getTranscript(): Promise<{
-    transcript: string;
-    chunkData: {
-      id: string;
-      speaker: string;
-      text: string;
-    }[];
-  }> {
+  async getTranscript(): Promise<SharedTypes.TranscriptData> {
     const transcriptPath = path.join(__dirname, '..', 'data', 'transcript.txt');
     let transcript = '';
     try {
