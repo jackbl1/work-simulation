@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -15,8 +15,20 @@ export class AppController {
     return this.appService.getUsers();
   }
 
+  @Post('fix-transcript')
+  async fixTranscript(): Promise<string> {
+    return this.appService.fixTranscript();
+  }
+
   @Get('transcript')
-  async getTranscript(): Promise<string> {
+  async getTranscript(): Promise<{
+    transcript: string;
+    chunkData: {
+      id: string;
+      speaker: string;
+      text: string;
+    }[];
+  }> {
     return this.appService.getTranscript();
   }
 }
