@@ -14,6 +14,7 @@ interface ChatMessage {
 }
 @Injectable()
 export class AppService {
+  // Insert an OpenAI key here to run the app
   openai = new OpenAI({
     apiKey: '',
   });
