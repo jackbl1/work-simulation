@@ -17,8 +17,6 @@ export const useChat = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  console.log("chat messages in useChat is", messages);
-
   const sendMessage = async (
     content: string,
     transcriptData: SharedTypes.TranscriptData

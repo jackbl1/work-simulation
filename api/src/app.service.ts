@@ -194,7 +194,7 @@ export class AppService {
       }
 
       const citationsMatch = responseContent.match(
-        /\[(chunk-\d+(?:,\s*chunk-\d+)*)\](?=[^[]*$)/,
+        /\[((?:chunk-)?\d+(?:,\s*(?:chunk-)?\d+)*)\](?=[^[]*$)/,
       );
       const citations = citationsMatch
         ? citationsMatch[1]
@@ -203,7 +203,7 @@ export class AppService {
         : [];
 
       const cleanedResponse = responseContent
-        .replace(/\s*\[chunk-\d+(?:,\s*chunk-\d+)*\](?=[^[]*$)/, '')
+        .replace(/\s*\[(?:chunk-)?\d+(?:,\s*(?:chunk-)?\d+)*\](?=[^[]*$)/, '')
         .trim();
 
       return {

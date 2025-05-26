@@ -48,7 +48,6 @@ export const ChatMessages = ({
         <VStack align="stretch" h="100%" overflowY="auto" p={4}>
           <Box flex="1">
             {messages.map((message, index) => {
-              console.log("map iteration 1");
               return (
                 <ChatMessage
                   key={`${message.role}-${index}`}

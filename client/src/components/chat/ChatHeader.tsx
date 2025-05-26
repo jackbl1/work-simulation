@@ -1,14 +1,16 @@
 import { Flex, Heading, IconButton, HStack } from "@chakra-ui/react";
 import { FiChevronRight, FiTrash2 } from "react-icons/fi";
 import { Tooltip } from "../ui/tooltip";
-import { useChat } from "../../hooks/useChat";
+
+interface ChatHeaderProps {
+  onToggleCollapse: () => void;
+  clearMessages: () => void;
+}
 
 export const ChatHeader = ({
   onToggleCollapse,
-}: {
-  onToggleCollapse: () => void;
-}) => {
-  const { clearMessages } = useChat();
+  clearMessages,
+}: ChatHeaderProps) => {
   return (
     <Flex
       pl={4}

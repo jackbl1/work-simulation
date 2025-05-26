@@ -22,7 +22,7 @@ export const TranscriptHeader = ({
       align="center"
     >
       <Heading size="sm" color="gray.700" flex="1">
-        Document Content
+        Transcript
       </Heading>
 
       <Tooltip

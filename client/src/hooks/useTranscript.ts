@@ -32,7 +32,7 @@ export const useTranscript = () => {
       } catch (error) {
         console.error("Error fetching transcript:", error);
         setTranscriptError(TRANSCRIPT_ERROR);
-        setTranscript({ transcript: "", chunkData: [] }); // Reset transcript on error
+        setTranscript({ transcript: "", chunkData: [] });
         setIsLoading(false);
       }
     };

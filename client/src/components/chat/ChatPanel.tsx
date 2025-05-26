@@ -16,7 +16,8 @@ export const ChatPanel = ({
   onToggleCollapse,
 }: ChatPanelProps) => {
   const { transcript } = useTranscript();
-  const { messages, sendMessage, isSubmitting, messagesEndRef } = useChat();
+  const { messages, sendMessage, isSubmitting, messagesEndRef, clearMessages } =
+    useChat();
 
   if (isCollapsed) {
     return (
@@ -56,7 +57,10 @@ export const ChatPanel = ({
       borderColor="gray.200"
       boxShadow="md"
     >
-      <ChatHeader onToggleCollapse={onToggleCollapse} />
+      <ChatHeader
+        onToggleCollapse={onToggleCollapse}
+        clearMessages={clearMessages}
+      />
       <ChatMessages
         messages={messages}
         isSubmitting={isSubmitting}
