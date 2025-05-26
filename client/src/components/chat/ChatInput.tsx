@@ -4,17 +4,22 @@ import { FiSend } from "react-icons/fi";
 import { toaster } from "../ui/toaster";
 
 interface ChatInputProps {
+  query: string;
+  setQuery: (query: string) => void;
   onSendMessage: (content: string) => void;
+  isSubmitting: boolean;
 }
 
-export const ChatInput = ({ onSendMessage }: ChatInputProps) => {
-  const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
+export const ChatInput = ({
+  query,
+  setQuery,
+  onSendMessage,
+  isSubmitting,
+}: ChatInputProps) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!message.trim()) {
+    if (!query.trim()) {
       toaster.create({
         title: "Message cannot be empty",
         //status: "warning",
@@ -23,30 +28,16 @@ export const ChatInput = ({ onSendMessage }: ChatInputProps) => {
       return;
     }
 
-    setIsSubmitting(true);
-    try {
-      await onSendMessage(message);
-      setMessage("");
-    } catch (error) {
-      console.error("Failed to send message:", error);
-      toaster.create({
-        title: "Failed to send message",
-        description: "Please try again later.",
-        // status: "error",
-        duration: 5000,
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    onSendMessage(query);
   };
 
   return (
     <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-      <Flex gap={2} width="100%">
+      <Flex gap={2} width="100%" alignItems="center">
         <Input
           flex={1}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Type your message..."
           bg="white"
           borderColor="gray.300"
@@ -59,12 +50,13 @@ export const ChatInput = ({ onSendMessage }: ChatInputProps) => {
         />
         <Button
           type="submit"
+          size="xs"
           colorScheme="blue"
-          isLoading={isSubmitting}
-          rightIcon={<FiSend />}
-          px={6}
+          loading={isSubmitting}
+          px={4}
         >
           Send
+          <FiSend size="12" />
         </Button>
       </Flex>
     </form>

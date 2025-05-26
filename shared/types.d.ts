@@ -2,7 +2,7 @@
 
 declare namespace SharedTypes {
   export interface TranscriptChunk {
-    id: string;
+    id: number;
     speaker: string;
     text: string;
   }
@@ -14,21 +14,20 @@ declare namespace SharedTypes {
     transcript: string;
 
     /**
-     * Array of transcript chunks
+     * Array of transcript raw text chunks, split by speaker
      */
     chunkData: TranscriptChunk[];
   }
 
-  /**
-   * Standard API response format
-   */
-  export interface ApiResponse<T> {
-    data: T;
-    success: boolean;
-    message?: string;
-    error?: {
-      code: string;
-      message: string;
-    };
+  export interface ChatResponse {
+    /**
+     * The raw text response from the chat endpoint
+     */
+    response: string;
+
+    /**
+     * Array of citations
+     */
+    citations: string[];
   }
 }

@@ -24,6 +24,7 @@
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "diff": "^8.0.2",
     "kysely": "^0.28.2",
     "openai": "^4.103.0",
     "pg": "^8.16.0",

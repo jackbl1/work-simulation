@@ -2,23 +2,42 @@ import { useEffect, useState } from "react";
 import { Box, Container, Heading, HStack, VStack } from "@chakra-ui/react";
 import { TranscriptPanel } from "./components/transcript/TranscriptPanel";
 import { ChatPanel } from "./components/chat/ChatPanel";
+import { TRANSCRIPT_ERROR } from "./utils/errors.constants";
 
 function App() {
-  const [transcript, setTranscript] = useState<string>("");
+  const [transcript, setTranscript] = useState<SharedTypes.TranscriptData>({
+    transcript: "",
+    chunkData: [],
+  });
+  const [isChatCollapsed, setIsChatCollapsed] = useState(false);
+  const [transcriptError, setTranscriptError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchTranscript = async () => {
       try {
+        setLoading(true);
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/transcript`
         );
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(
+            `HTTP error! status: ${response.status}, message: ${errorText}`
+          );
+        }
+
         const data: SharedTypes.TranscriptData = await response.json();
 
-        if (data) {
-          setTranscript(data.transcript);
-        }
+        setTranscript(data);
+        setTranscriptError(null);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching transcript:", error);
+        setTranscriptError(TRANSCRIPT_ERROR);
+        setTranscript({ transcript: "", chunkData: [] }); // Reset transcript on error
+        setLoading(false);
       }
     };
 
@@ -43,11 +62,28 @@ function App() {
             borderColor="gray.200"
             shadow="sm"
           >
-            <Box flex="1" borderRightWidth="1px" borderColor="gray.200">
-              <TranscriptPanel transcript={transcript} />
+            <Box flex="1" borderColor="gray.200" transition="all 0.2s">
+              <TranscriptPanel
+                transcript={transcript}
+                setTranscript={setTranscript}
+                loading={loading}
+                error={transcriptError}
+              />
             </Box>
-            <Box flex="1">
-              <ChatPanel />
+            <Box
+              position="relative"
+              width={isChatCollapsed ? "40px" : "400px"}
+              flexShrink={0}
+              borderColor="gray.200"
+              bg="white"
+              transition="all 0.2s"
+              overflow="hidden"
+            >
+              <ChatPanel
+                transcript={transcript}
+                onToggleCollapse={() => setIsChatCollapsed(!isChatCollapsed)}
+                isCollapsed={isChatCollapsed}
+              />
             </Box>
           </HStack>
         </VStack>
