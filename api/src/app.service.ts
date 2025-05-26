@@ -15,8 +15,7 @@ interface ChatMessage {
 @Injectable()
 export class AppService {
   openai = new OpenAI({
-    apiKey:
-      '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',
+    apiKey: '',
   });
 
   getHello(): string {
