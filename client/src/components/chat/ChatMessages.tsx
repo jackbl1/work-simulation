@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import { useMemo } from "react";
 import {
   Box,
   HStack,
@@ -8,8 +8,70 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import type { Message } from "./ChatPanel";
+import type { Message } from "@/hooks/useChat";
 import { keyframes } from "@emotion/react";
+
+interface ChatMessagesProps {
+  messages: Message[];
+  isSubmitting: boolean;
+  messagesEndRef: React.RefObject<HTMLDivElement> | null;
+}
+
+export const ChatMessages = ({
+  messages,
+  isSubmitting,
+  messagesEndRef,
+}: ChatMessagesProps) => {
+  return useMemo(
+    () => (
+      <Box
+        flex="1"
+        overflowY="auto"
+        p={4}
+        bg="white"
+        sx={{
+          "&::-webkit-scrollbar": {
+            width: "8px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "gray.50",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "gray.300",
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            background: "gray.400",
+          },
+        }}
+      >
+        <VStack align="stretch" h="100%" overflowY="auto" p={4}>
+          <Box flex="1">
+            {messages.map((message, index) => {
+              console.log("map iteration 1");
+              return (
+                <ChatMessage
+                  key={`${message.role}-${index}`}
+                  message={message}
+                />
+              );
+            })}
+            {isSubmitting && (
+              <LoadingMessage
+                message={{
+                  role: "assistant",
+                  content: "Thinking...",
+                }}
+              />
+            )}
+            <div ref={messagesEndRef} />
+          </Box>
+        </VStack>
+      </Box>
+    ),
+    [messages, isSubmitting, messagesEndRef]
+  );
+};
 
 interface ChatMessageProps {
   message: Message;
@@ -21,14 +83,8 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
   const alignSelf = isAssistant ? "flex-start" : "flex-end";
   const borderRadius = isAssistant ? "0 8px 8px 8px" : "8px 0 8px 8px";
 
-  console.log("rendering message", message.citations);
-
   return (
-    <VStack
-      align={isAssistant ? "flex-start" : "flex-end"}
-      width="100%"
-      spacing={1}
-    >
+    <VStack align={isAssistant ? "flex-start" : "flex-end"} width="100%">
       <Text
         fontSize="xs"
         color="gray.500"

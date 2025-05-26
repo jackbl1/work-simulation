@@ -154,16 +154,14 @@ export class AppService {
       role: 'system' as const,
       content: `You are an expert at psychology and reading/interpreting therapy transcripts. 
     Here is a transcript of a conversation between a patient and a therapist. 
-    Answer the patient's question based on the transcript, and output citations at the bottom 
+    The user is the therapist reviewing this transcript after the session has ended. Respond according to this context.
+    Answer the therapist's question based on the transcript, and output citations at the bottom 
     of your response citing the chunks of the transcript that you used to answer the question. 
     Make sure your citations follow the format [chunk-1, chunk-2] and use the chunk id defined in the transcript data.
     Output the citations at the very end of the response. Do not include any additional text or punctuation after the citations.
-    
-    Example output:
-    
-    Here is my response to the patient's question.
-    
-    [chunk-1, chunk-2]
+    Keep your response clear and concise, and always include citations.
+
+    If the user's query does not directly ask a question related to the transcript respond by asking the user to rephrase their question to be more relevant to your capabilities.
 
     Transcript:
     ${JSON.stringify(transcript, null, 2)}`,
@@ -194,11 +192,6 @@ export class AppService {
       if (!responseContent) {
         throw new Error('Empty response from OpenAI');
       }
-
-      console.log(
-        'Chat completion finished - response content:',
-        responseContent,
-      );
 
       const citationsMatch = responseContent.match(
         /\[(chunk-\d+(?:,\s*chunk-\d+)*)\](?=[^[]*$)/,
